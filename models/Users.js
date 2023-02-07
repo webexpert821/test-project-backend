@@ -1,47 +1,46 @@
-const mongoose = require('mongoose')
+// user model
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define("user", {
+        firstName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        lastName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            isEmail: true, // checks for email format
+            allowNull: false
+        },
+        address1: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        address2: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        city: {
+            type: DataTypes.STRING,
+            required: true,
+        },
+        state: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        phone: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
 
-const UserSchema = new mongoose.Schema({
-    objectId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'newUser'
-    },
-    firstName: {
-        type: String,
-        required: true,
-    },
-    lastName: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    address1: {
-        type: String,
-        required: true,
-    },
-    address2: {
-        type: String,
-        required: true,
-    },
-    city: {
-        type: String,
-        required: true,
-    },
-    state: {
-        type: String,
-        required: true,
-    },
-    phoneNumber: {
-        type: String,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    }
-});
+    },  {timestamps: true}, )
 
-module.exports = Users = mongoose.model('user', UserSchema)
+    return User
+}
