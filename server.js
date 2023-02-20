@@ -24,9 +24,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 // synchronizing the database and forcing it to false so we don't lose data
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("db has been re sync")
-})
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("db has been re sync")
+// })
 
 //routes for the user API
 app.use('/api/users', userRoutes)

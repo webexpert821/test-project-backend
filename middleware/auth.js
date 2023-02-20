@@ -9,7 +9,6 @@ const User = db.Users;
  const saveUser = async (req, res, next) => {
     //search the database to see if user exist
     try {
-        console.log({ User }, 12);
         const email= await User.findOne({
             where: {
                 email: req.body.email,
