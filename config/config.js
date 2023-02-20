@@ -1,11 +1,13 @@
 const ENV = require('dotenv').config();
 
+console.log(process.env);
+
 module.exports = {
   "development": {
-    "username": "postgres",
-    "password": "123456",
-    "database": "users",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": process.env.user,
+    "password": process.env.password,
+    "database": process.env.database,
+    "host": process.env.host,
+    "dialect": process.env.dialect
   }
 }

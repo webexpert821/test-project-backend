@@ -4,13 +4,33 @@ const db = require("../models");
 const jwt = require("jsonwebtoken");
 
 // Assigning users to the variable User
-const User = db.users;
+const User = db.Users;
+
+const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
 
 //signing a user up
 //hashing users password before its saved to the database with bcrypt
 const signup = async (req, res) => {
  try {
     const { firstName, lastName, email, address1, address2, city, state, phone, password } = req.body;
+    
+    if(firstName === "") res.status(401).send('firstName is required');
+    if(email === "") res.status(401).send('email is required');
+    if(!validateEmail(email)) res.status(401).send('Email is not valid');
+    if(address1 === "") res.status(401).send('address1 is required');
+    if(address2 === "") res.status(401).send('address2 is required');
+    if(city === "") res.status(401).send('city is required');
+    if(state === "") res.status(401).send('state is required');
+    if(phone === "") res.status(401).send('phone is required');
+    if(phone === "") res.status(401).send('phone is required');
+    if(password === "") res.status(401).send('password is required');
+
     const data = {
         firstName,
         lastName,
@@ -23,7 +43,7 @@ const signup = async (req, res) => {
         password: await bcrypt.hash(password, 10)
     };
 
-    console.log(phone);
+    console.log(phone, 26);
 
     const user = await User.create(data);
     //if user details is captured
@@ -32,12 +52,12 @@ const signup = async (req, res) => {
     
     // set cookie with the token generated
     if (user) {
-        let token = jwt.sign({ id: user.id }, process.env.secretKey, {
-        expiresIn: 1 * 24 * 60 * 60 * 1000,
+        const token = jwt.sign({ id: user.id }, process.env.secretKey, {
+          expiresIn: 1 * 24 * 60 * 60 * 1000,
         });
         res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
         //send users details
-        return res.status(201).send(user);
+        return res.status(201).send({ token });
 
    } else {
      return res.status(409).send("Details are not correct");
@@ -52,6 +72,17 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
  try {
     const { email, password } = req.body;
+    if(email === "") {
+      res.status(401).send('Email is required');
+    }
+
+    if(!validateEmail(email)) {
+      res.status(401).send('Email is not valid');
+    }
+
+    if(password === "") {
+      res.status(401).send('Password is required');
+    }
 
    //find a user by their email
     const user = await User.findOne({
@@ -69,7 +100,7 @@ const login = async (req, res) => {
       console.log({ isSame })
 
      if (isSame) {
-       let token = jwt.sign({ id: user.id }, process.env.secretKey, {
+       const token = jwt.sign({ id: user.id }, process.env.secretKey, {
          expiresIn: 1 * 24 * 60 * 60 * 1000,
        });
 
@@ -79,7 +110,7 @@ const login = async (req, res) => {
        console.log("user", JSON.stringify(user, null, 2));
        console.log(token);
        //send user data
-       return res.status(201).send(user);
+       return res.status(201).send(token);
        
      } else {
        return res.status(401).send("Authentication failed");

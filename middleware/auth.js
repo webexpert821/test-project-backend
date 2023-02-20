@@ -1,7 +1,7 @@
 const express = require('express')
 const db = require('../models')
 
-const User = db.users;
+const User = db.Users;
 
 //Function to check if username or email already exist in the database
 //this is to avoid having two users with the same username and email
@@ -9,6 +9,7 @@ const User = db.users;
  const saveUser = async (req, res, next) => {
     //search the database to see if user exist
     try {
+        console.log({ User }, 12);
         const email= await User.findOne({
             where: {
                 email: req.body.email,
